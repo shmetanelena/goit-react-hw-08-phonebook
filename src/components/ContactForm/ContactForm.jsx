@@ -1,15 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import styles from './ContactForm.module.css';
-import {
-  useCreateContactMutation,
-  useFetchContactsQuery,
-} from 'redux/contacts';
 import toast from 'react-hot-toast';
+import { contactsOperations, contactsSelectors } from 'redux/contacts';
+import { useSelector, useDispatch } from 'react-redux';
 
 export const ContactForm = () => {
-  const [createContact] = useCreateContactMutation();
-  const { data: contacts } = useFetchContactsQuery();
+  const dispatch = useDispatch();
+  const contacts = useSelector(contactsSelectors.getContacts);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const nameInputId = useRef();
@@ -30,12 +28,12 @@ export const ContactForm = () => {
       return;
     }
     try {
-      await createContact({ name, number });
+      await dispatch(contactsOperations.addContact({ name, number })).unwrap();
       setName('');
       setNumber('');
       toast.success('Contact created');
     } catch (e) {
-      console.log(e);
+      toast.error('Error occured');
     }
   };
 

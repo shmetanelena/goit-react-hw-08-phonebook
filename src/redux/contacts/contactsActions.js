@@ -1,3 +1,9 @@
 import { createAction } from '@reduxjs/toolkit';
 
-export const setFilter = createAction('contacts/setFilter');
+const setFilter = createAction('contacts/setFilter');
+
+const actions = {
+  setFilter,
+};
+
+export default actions;

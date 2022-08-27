@@ -1,17 +1,22 @@
 import styles from './ContactListItem.module.css';
-import { useDeleteContactMutation } from 'redux/contacts';
 import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { contactsOperations } from 'redux/contacts';
+import { useState } from 'react';
 
 export const ContactListItem = ({ id, name, number }) => {
-  const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
+  const dispatch = useDispatch();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     try {
-      await deleteContact(id);
+      setIsDeleting(true);
+      await dispatch(contactsOperations.deleteContact(id)).unwrap();
       toast.success('Contact has deleted');
     } catch (e) {
-      console.log(e);
+      toast.error('Error occured');
     }
+    setIsDeleting(false);
   };
   return (
     <li key={id} className={styles.contactList_item}>
